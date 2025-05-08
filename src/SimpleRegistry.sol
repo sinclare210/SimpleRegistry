@@ -12,6 +12,10 @@ contract SimpleRegistry {
 
     string[] names;
 
+    // Events
+    event NameAdded(address indexed user, string name);
+    event NameRemoved(address indexed user, string name);
+
     function addName(string memory _name) public {
         if (msg.sender == address(0)) {
             revert Unauthorized();
@@ -24,8 +28,12 @@ contract SimpleRegistry {
                 revert("Name already Exist");
             }
         }
+
         user[msg.sender].push(_name);
         names.push(_name);
+
+        // Emit NameAdded event
+        emit NameAdded(msg.sender, _name);
     }
 
     function removeName(string memory _name) public {
@@ -58,12 +66,15 @@ contract SimpleRegistry {
                 break;
             }
         }
+
+        // Emit NameRemoved event
+        emit NameRemoved(msg.sender, _name);
     }
 
-    function getAllNames() public view returns (string[] memory name) {
+    function getAllNames() public view returns (string[] memory) {
         if (msg.sender == address(0)) {
             revert Unauthorized();
         }
-        return name;
+        return user[msg.sender];
     }
 }
