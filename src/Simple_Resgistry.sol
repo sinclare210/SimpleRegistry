@@ -26,6 +26,7 @@ contract SimpleResgistry {
     event NameReleased(address indexed user, string name);
 
     function _stringToBytes32 (string memory _name) internal pure returns(bytes32 result) {
+        
         bytes memory name = bytes(_name);
 
         if(name.length >= 32){revert NameTooLong();}
