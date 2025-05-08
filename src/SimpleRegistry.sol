@@ -24,7 +24,7 @@ contract SimpleRegistry {
         string[] storage name = user[msg.sender];
 
         for (uint256 i = 0; i < name.length; i++) {
-            if ((name[i]).compareStrings(_name) == true) {
+            if (StringUtils.compareStrings((name[i]),_name) == true) {
                 revert("Name already Exist");
             }
         }
