@@ -6,7 +6,7 @@ import {StringUtils} from "./StringUtils.sol";
 contract SimpleRegistry {
     error Unauthorized();
 
-    using StringUtils for string; 
+    using StringUtils for string;
 
     mapping(address => string[]) private user;
     string[] names;
@@ -58,7 +58,7 @@ contract SimpleRegistry {
 
         // Remove from global list
         for (uint256 i = 0; i < names.length; i++) {
-            if (names[i].compareStrings(_name)) { 
+            if (names[i].compareStrings(_name)) {
                 names[i] = names[names.length - 1];
                 names.pop();
                 break;
