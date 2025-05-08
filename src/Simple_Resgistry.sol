@@ -17,6 +17,10 @@ contract SimpleResgistry {
 
     mapping(bytes32 => address) private nameToOwner;
 
+    event NameAdded(address indexed user, string name);
+
+    event NameReleased(address indexed user, string name);
+
     function _stringToBytes32 (string memory _name) internal pure returns(bytes32 result) {
         bytes memory name = bytes(_name);
 
@@ -50,6 +54,8 @@ contract SimpleResgistry {
         userName[msg.sender].add(name);
         nameToOwner[name] = msg.sender;
 
+        emit NameAdded(msg.sender, _name);
+
     }
 
     function releaseName (string calldata _name) public {
@@ -61,6 +67,8 @@ contract SimpleResgistry {
         allNames.remove(name);
         userName[msg.sender].remove(name);
         delete nameToOwner[name];
+
+        emit NameReleased(msg.sender, _name);
 
     }
 
