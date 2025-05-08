@@ -9,6 +9,10 @@ contract SimpleResgistry {
 
     error NameTooLong();
 
+    error NameNotPresent();
+
+    error NameInUse();
+
     using EnumerableSet for EnumerableSet.Bytes32Set;
 
     EnumerableSet.Bytes32Set private allNames;
@@ -48,7 +52,7 @@ contract SimpleResgistry {
 
         bytes32 name = _stringToBytes32(_name);
 
-        require(allNames.contains(name) == false, "Name in use");
+        if(allNames.contains(name) == true){revert NameInUse();} 
 
         allNames.add(name);
         userName[msg.sender].add(name);
@@ -62,7 +66,7 @@ contract SimpleResgistry {
 
         bytes32 name = _stringToBytes32(_name);
 
-        require(allNames.contains(name) == true, "Name not present");
+        if(allNames.contains(name) == false){revert NameNotPresent();}
 
         allNames.remove(name);
         userName[msg.sender].remove(name);
@@ -80,7 +84,7 @@ contract SimpleResgistry {
 
         bytes32 name = _stringToBytes32(_name);
 
-        require(allNames.contains(name) == true, "Name not present");
+        if(allNames.contains(name) == false){revert NameNotPresent();}
 
         return nameToOwner[name];
     }
@@ -96,7 +100,7 @@ contract SimpleResgistry {
             result[i] = _bytes32ToString(userName[user].at(i));
 
         }
-        
+
         return result;
     }
 
