@@ -6,7 +6,7 @@ import {SimpleRegistry} from "../src/SimpleRegistry.sol";
 contract SimpleRegisterScript is Script {
 
     SimpleRegistry public simpleRegistry;
-    
+
     function run () external {
         
         vm.startBroadcast();
@@ -14,5 +14,6 @@ contract SimpleRegisterScript is Script {
         simpleRegistry = new SimpleRegistry();
         
         vm.stopBroadcast();
+        
     }
 }
