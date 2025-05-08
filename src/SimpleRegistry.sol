@@ -6,7 +6,7 @@ import {StringUtils} from "./StringUtils.sol";
 contract SimpleRegistry {
     error Unauthorized();
 
-    using StringUtils for string; // This makes the compareStrings function available for string types.
+    using StringUtils for string; 
 
     mapping(address => string[]) private user;
     string[] names;
@@ -23,7 +23,7 @@ contract SimpleRegistry {
         string[] storage name = user[msg.sender];
 
         for (uint256 i = 0; i < name.length; i++) {
-            if ((name[i]).compareStrings(_name)) { // Directly using the compareStrings function
+            if ((name[i]).compareStrings(_name)) {
                 revert("Name already Exist");
             }
         }
@@ -44,7 +44,7 @@ contract SimpleRegistry {
         bool userRemoved = false;
 
         for (uint256 i = 0; i < nameList.length; i++) {
-            if (nameList[i].compareStrings(_name)) { // Using the compareStrings function
+            if (nameList[i].compareStrings(_name)) {
                 nameList[i] = nameList[nameList.length - 1];
                 nameList.pop();
                 userRemoved = true;
@@ -58,7 +58,7 @@ contract SimpleRegistry {
 
         // Remove from global list
         for (uint256 i = 0; i < names.length; i++) {
-            if (names[i].compareStrings(_name)) { // Using the compareStrings function
+            if (names[i].compareStrings(_name)) { 
                 names[i] = names[names.length - 1];
                 names.pop();
                 break;
