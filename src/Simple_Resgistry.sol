@@ -86,11 +86,17 @@ contract SimpleResgistry {
     }
 
     function getUserNames(address user) external view returns (string[] memory) {
+
         uint256 len = userName[user].length();
+
         string[] memory result = new string[](len);
+
         for (uint256 i = 0; i < len; i++) {
+
             result[i] = _bytes32ToString(userName[user].at(i));
+
         }
+        
         return result;
     }
 
