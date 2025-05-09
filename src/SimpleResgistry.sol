@@ -19,13 +19,13 @@ contract SimpleRegistry {
 
     mapping (address => EnumerableSet.Bytes32Set) private userName;
 
-    mapping(bytes32 => address) private nameToOwner;
+    mapping(bytes32 => address) public nameToOwner;
 
     event NameAdded(address indexed user, string name);
 
     event NameReleased(address indexed user, string name);
 
-    function _stringToBytes32 (string memory _name) internal pure returns(bytes32 result) {
+    function _stringToBytes32 (string memory _name) public pure returns(bytes32 result) {
         
         bytes memory name = bytes(_name);
 
@@ -37,7 +37,7 @@ contract SimpleRegistry {
         }
     }
 
-    function _bytes32ToString(bytes32 b32) internal pure returns (string memory) {
+    function _bytes32ToString(bytes32 b32) public pure returns (string memory) {
         uint8 i = 0;
         while (i < 32 && b32[i] != 0) {
             i++;
@@ -104,6 +104,17 @@ contract SimpleRegistry {
 
         return result;
     }
+
+    function getAllName(uint256 index) public view returns (bytes32) {
+            return allNames.at(index);
+        
+    }
+
+    function getUserNameAt(address user, uint256 index) external view returns (bytes32) {
+    return userName[user].at(index);
+}
+
+
 
 
 }
