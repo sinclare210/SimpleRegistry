@@ -120,14 +120,15 @@ contract SimpleRegistryTest is Test {
         assertEq(simpleRegistry.nameToOwner(nameConv), sinc);
     }
 
-    function testIfStringToBytesRevrtOnMoreThan32 () public  {
-        string memory name = "sinclairrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr";
+    function testIfStringToBytesRevrtOnMoreThan32() public {
+        string memory name =
+            "sinclairrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr";
 
         vm.expectRevert(SimpleRegistry.NameTooLong.selector);
         simpleRegistry._stringToBytes32(name);
     }
 
-    function testGetTheNumberOfNameInTheRegistry () public {
+    function testGetTheNumberOfNameInTheRegistry() public {
         address sinc = address(0x1);
         address sincs = address(0x2);
 
@@ -141,75 +142,67 @@ contract SimpleRegistryTest is Test {
     }
 
     function testReusingReleasedName() public {
-    address sinc = address(0x1);
-    string memory name = "sinclair";
+        address sinc = address(0x1);
+        string memory name = "sinclair";
 
-    vm.prank(sinc);
-    simpleRegistry.addName(name);
+        vm.prank(sinc);
+        simpleRegistry.addName(name);
 
-    vm.prank(sinc);
-    simpleRegistry.releaseName(name);
+        vm.prank(sinc);
+        simpleRegistry.releaseName(name);
 
-    // Re-adding after release should succeed
-    vm.prank(sinc);
-    simpleRegistry.addName(name);
+        // Re-adding after release should succeed
+        vm.prank(sinc);
+        simpleRegistry.addName(name);
 
-    assertEq(simpleRegistry.getTheNumberOfNameInTheRegistry(), 1);
-}
+        assertEq(simpleRegistry.getTheNumberOfNameInTheRegistry(), 1);
+    }
 
+    function testStringToBytes32ExactLength() public {
+        string memory name = "abcdefghijklmnopqrstuvwxyzabcde"; // 31 characters
+        bytes32 b32 = simpleRegistry._stringToBytes32(name);
+        string memory converted = simpleRegistry._bytes32ToString(b32);
+        assertEq(converted, name);
+    }
 
+    function testReleaseNameCleansUp() public {
+        address sinc = address(0x1);
+        string memory name = "sinclair";
+        bytes32 nameBytes = simpleRegistry._stringToBytes32(name);
 
-function testStringToBytes32ExactLength() public {
-    string memory name = "abcdefghijklmnopqrstuvwxyzabcde"; // 31 characters
-    bytes32 b32 = simpleRegistry._stringToBytes32(name);
-    string memory converted = simpleRegistry._bytes32ToString(b32);
-    assertEq(converted, name);
-}
+        vm.prank(sinc);
+        simpleRegistry.addName(name);
 
-function testReleaseNameCleansUp() public {
-    address sinc = address(0x1);
-    string memory name = "sinclair";
-    bytes32 nameBytes = simpleRegistry._stringToBytes32(name);
+        vm.prank(sinc);
+        simpleRegistry.releaseName(name);
 
-    vm.prank(sinc);
-    simpleRegistry.addName(name);
+        // All should be cleaned
+        assertEq(simpleRegistry.getTheNumberOfNameInTheRegistry(), 0);
+        assertEq(simpleRegistry.nameToOwner(nameBytes), address(0));
+    }
 
-    vm.prank(sinc);
-    simpleRegistry.releaseName(name);
+    function testBytes32ToStringWorks() public {
+        string memory name = "sinclair";
+        bytes32 b32 = simpleRegistry._stringToBytes32(name);
+        string memory convertedBack = simpleRegistry._bytes32ToString(b32);
 
-    // All should be cleaned
-    assertEq(simpleRegistry.getTheNumberOfNameInTheRegistry(), 0);
-    assertEq(simpleRegistry.nameToOwner(nameBytes), address(0));
-}
+        assertEq(convertedBack, name);
+    }
 
-function testBytes32ToStringWorks() public {
-    string memory name = "sinclair";
-    bytes32 b32 = simpleRegistry._stringToBytes32(name);
-    string memory convertedBack = simpleRegistry._bytes32ToString(b32);
+    function testGetUserNames() public {
+        address sinc = address(0x1);
 
-    assertEq(convertedBack, name);
-}
+        vm.prank(sinc);
+        simpleRegistry.addName("Sinclair");
 
-function testGetUserNames() public {
-    address sinc = address(0x1);
+        vm.prank(sinc);
+        simpleRegistry.addName("Neymar");
 
-    vm.prank(sinc);
-    simpleRegistry.addName("Sinclair");
+        vm.prank(sinc);
+        string[] memory names = simpleRegistry.getUserNames(sinc);
 
-    vm.prank(sinc);
-    simpleRegistry.addName("Neymar");
-
-    vm.prank(sinc);
-    string[] memory names = simpleRegistry.getUserNames(sinc);
-
-    assertEq(names.length, 2);
-    assertEq(names[0], "Sinclair");
-    assertEq(names[1], "Neymar");
-}
-
-
-
-
-
-
+        assertEq(names.length, 2);
+        assertEq(names[0], "Sinclair");
+        assertEq(names[1], "Neymar");
+    }
 }
