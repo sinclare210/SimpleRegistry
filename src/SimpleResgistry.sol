@@ -111,8 +111,8 @@ contract SimpleRegistry {
     }
 
     function getUserNameAt(address user, uint256 index) external view returns (bytes32) {
-    return userName[user].at(index);
-}
+        return userName[user].at(index);
+    }
 
 
 

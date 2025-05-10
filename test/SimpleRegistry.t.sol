@@ -9,6 +9,10 @@ contract SimpleRegistryTest is Test{
 
     SimpleRegistry public simpleRegistry;
 
+    event NameAdded(address indexed user, string name);
+
+        event NameReleased(address indexed user, string name);
+
     function setUp () external {
 
         simpleRegistry = new SimpleRegistry();
@@ -52,6 +56,8 @@ contract SimpleRegistryTest is Test{
         assertEq(simpleRegistry.getUserNameAt(sinc,0), name);
         assertEq(simpleRegistry.getUserNameAt(sinc,1), name1);
 
+        
+
     }
 
     function testIfNameToOwnerWork() public {
@@ -68,8 +74,60 @@ contract SimpleRegistryTest is Test{
         bytes32 name = simpleRegistry._stringToBytes32("Sinclair");
 
         assertEq(simpleRegistry.nameToOwner(name), sinc);
+        assertEq(simpleRegistry.getOwnerOfName("sinclair"), sinc);
 
     }
+
+    // function testGetTheNumberOfNameInTheRegistry () public {
+
+    // }
+
+    
+    function testAddNameEmitsEvent() public {
+        address sinc = address(0x1);
+        string memory name = "sinclair";
+
+        vm.expectEmit(true, false, false, true);
+        emit NameAdded(sinc, name);
+
+        vm.prank(sinc);
+        simpleRegistry.addName(name);
+    }
+
+    function testReleaseNameEmitSuccessful () public {
+        address sinc = address(0x1);
+        string memory name = "sinclair";
+
+        vm.prank(sinc);
+        simpleRegistry.addName(name);
+
+        vm.expectEmit(true, false, false, true);
+        emit NameReleased(sinc, name);
+
+        vm.prank(sinc);
+        simpleRegistry.releaseName(name);
+
+
+
+    }
+
+    function testReleaseNameRevertnUsingNameYouDontHave () public {
+
+        address sinc = address(0x1);
+        string memory name = "sinclair";
+
+        vm.prank(sinc);
+        simpleRegistry.addName(name);
+
+        vm.prank(sinc);
+        vm.expectRevert(SimpleRegistry.NameNotPresent.selector);
+        simpleRegistry.releaseName("Sinclair");
+
+    }
+    
+
+
+
 
 
 
