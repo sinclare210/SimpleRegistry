@@ -101,4 +101,27 @@ contract SimpleRegistryTest is Test {
         vm.expectRevert(SimpleRegistry.NameNotPresent.selector);
         simpleRegistry.releaseName("Sinclair");
     }
+
+    function testGetOwnerOfName () public {
+        address sinc = address(0x1);
+        string memory name = "sinclair";
+        string memory name1 = "sinc";
+
+        bytes32 nameConv = simpleRegistry._stringToBytes32("sinclair");
+        
+
+
+        vm.prank(sinc);
+        simpleRegistry.addName(name);
+
+        //revert if the user does not have the name
+        vm.prank(sinc);
+        vm.expectRevert(SimpleRegistry.NameNotPresent.selector);
+        simpleRegistry.getOwnerOfName(name1);
+
+
+
+        assertEq(simpleRegistry.nameToOwner(nameConv), sinc);
+
+    }
 }
