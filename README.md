@@ -1,66 +1,55 @@
-## Foundry
+# 🧾 SimpleRegistry – Testnet Deployment & Documentation
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+A simple decentralized registry system for unique names, written in Solidity. It uses `EnumerableSet` from OpenZeppelin to store and manage user-claimed names efficiently. This project includes a full suite of Foundry-based unit tests and emits events on name registration and release.
 
-Foundry consists of:
+---
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## 🚀 Overview
 
-## Documentation
+**SimpleRegistry** allows users to:
+- Register unique names (case-sensitive).
+- Release their claimed names.
+- Retrieve registered names.
+- Query the number of total registered names.
+- View usernames associated with any address.
 
-https://book.getfoundry.sh/
+---
 
-## Usage
+## 📦 Tech Stack
 
-### Build
+| Tool/Library              | Description                                            |
+|---------------------------|--------------------------------------------------------|
+| **Solidity ^0.8.19**      | Smart contract programming language                    |
+| **OpenZeppelin Contracts**| Used for `EnumerableSet` utility for managing name sets|
+| **Foundry**               | Smart contract testing framework via `forge-std/Test.sol` |
+| **Ethereum Stack Exchange** | Research for string ↔ `bytes32` conversions and best practices with `EnumerableSet` |
 
-```shell
-$ forge build
-```
+---
 
-### Test
+## 📚 Key References Used
 
-```shell
-$ forge test
-```
+- 🔁 [How to convert a string to `bytes32`](https://ethereum.stackexchange.com/questions/9142/how-to-convert-a-string-to-bytes32)
+- 🔁 [How to convert a `bytes32` to string](https://ethereum.stackexchange.com/questions/2519/how-to-convert-a-bytes32-to-string)
+- 📖 [Exploring `EnumerableSet` in OpenZeppelin](https://medium.com/@daneelkent/exploring-enumerableset-in-openzeppelin-how-where-and-when-to-use-it-f21afdcbc8b5)
 
-### Format
+---
 
-```shell
-$ forge fmt
-```
+## 🧪 Tests (Foundry)
 
-### Gas Snapshots
+Located in `test/SimpleRegistryTest.t.sol`
 
-```shell
-$ forge snapshot
-```
+### Test Coverage:
+- ✅ Add a name
+- ✅ Prevent duplicate name registration
+- ✅ Emit `NameAdded` and `NameReleased` events
+- ✅ Release registered names
+- ✅ Handle unregistered name errors
+- ✅ Query username by address
+- ✅ Validate string length (max 32 bytes)
+- ✅ Return total number of names
 
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+### Commands:
+```bash
+forge install openzeppelin/openzeppelin-contracts
+forge build
+forge test -vvvv
