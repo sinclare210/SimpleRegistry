@@ -4,7 +4,7 @@ pragma solidity ^0.8.19;
 import "openzeppelin-contracts/contracts/utils/structs/EnumerableSet.sol";
 
 contract SimpleRegistry {
-    error Unauthorized();
+    
 
     error NameTooLong();
 
